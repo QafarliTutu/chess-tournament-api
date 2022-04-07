@@ -19,7 +19,7 @@ public class PointController {
 
     private final PointService pointService;
 
-    @PostMapping
+    @PutMapping
     public ServiceResponse updateResult(@RequestBody UpdatePointDto updatePointDto) {
         Round round = pointService.updateResult(updatePointDto);
         log.info(round.toString());
