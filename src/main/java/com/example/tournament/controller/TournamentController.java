@@ -1,5 +1,6 @@
 package com.example.tournament.controller;
 
+import com.example.tournament.model.entity.Round;
 import com.example.tournament.model.entity.Tournament;
 import com.example.tournament.model.request.CreateTournamentDto;
 import com.example.tournament.model.response.serviceResponse.ServiceResponse;
@@ -9,6 +10,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/tournaments")
@@ -34,6 +37,14 @@ public class TournamentController {
     public ServiceResponse getTournament(@PathVariable Long tournamentId) {
         Tournament tournament = tournamentService.findById(tournamentId);
         return ServiceResponse.createSuccessResponse(tournament);
+    }
+
+    @GetMapping("/{tournamentId}/rounds")
+    public ServiceResponse getRounds(@PathVariable Long tournamentId) {
+        Tournament tournament = tournamentService.findById(tournamentId);
+        List<Round> rounds = tournament.getRounds();
+        Map<Integer, List<Round>> roundGrouped = rounds.stream().collect(Collectors.groupingBy(Round::getRoundNum));
+        return ServiceResponse.createSuccessResponse(roundGrouped);
     }
 
 }
