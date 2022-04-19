@@ -26,6 +26,7 @@ public class TournamentService {
 
         Tournament tournament = Tournament.builder()
                 .name(createTournamentDto.getTournamentName())
+                .passcode(createTournamentDto.getPasscode())
                 .build();
         List<Player> players = playerService.createPlayers(createTournamentDto.getNames(), tournament);
         tournament.setPlayers(players);

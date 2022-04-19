@@ -3,6 +3,8 @@ package com.example.tournament.controller;
 import com.example.tournament.model.entity.Round;
 import com.example.tournament.model.entity.Tournament;
 import com.example.tournament.model.request.CreateTournamentDto;
+import com.example.tournament.model.request.PasscodeDto;
+import com.example.tournament.model.response.serviceResponse.Errors;
 import com.example.tournament.model.response.serviceResponse.ServiceResponse;
 import com.example.tournament.service.TournamentService;
 import lombok.RequiredArgsConstructor;
@@ -45,6 +47,22 @@ public class TournamentController {
         List<Round> rounds = tournament.getRounds();
         Map<Integer, List<Round>> roundGrouped = rounds.stream().collect(Collectors.groupingBy(Round::getRoundNum));
         return ServiceResponse.createSuccessResponse(roundGrouped);
+    }
+
+    @PostMapping("/{tournamentId}/test-passcode")
+    public ServiceResponse testPasscode(@PathVariable Long tournamentId, @RequestBody PasscodeDto passcodeDto) {
+        Tournament tournament = tournamentService.findById(tournamentId);
+        if (passcodeDto.getPasscode().equals(tournament.getPasscode())) {
+            return ServiceResponse.createSuccessResponse(true);
+        } else return ServiceResponse.builder()
+                .successful(false)
+                .payload(false)
+                .errors(Errors.builder()
+                        .code("401")
+                        .message("passcode doesn't match")
+                        .build())
+                .warnings(null)
+                .build();
     }
 
 }

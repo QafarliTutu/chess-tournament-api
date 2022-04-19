@@ -4,15 +4,9 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.util.List;
-
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class CreateTournamentDto {
-
-    private String tournamentName;
-    private List<String> names;
+public class PasscodeDto {
     private String passcode;
-
 }

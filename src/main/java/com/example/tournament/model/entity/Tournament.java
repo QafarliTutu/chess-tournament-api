@@ -25,4 +25,6 @@ public class Tournament {
     @OneToMany(mappedBy = "tournament", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<Round> rounds;
 
+    private String passcode;
+
 }
