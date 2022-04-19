@@ -2,12 +2,10 @@ package com.example.tournament.service;
 
 import com.example.tournament.exception.NoDataFoundException;
 import com.example.tournament.model.entity.Player;
-import com.example.tournament.model.entity.Point;
 import com.example.tournament.model.entity.Round;
 import com.example.tournament.model.entity.Tournament;
 import com.example.tournament.model.enums.Result;
 import com.example.tournament.model.request.UpdatePointDto;
-import com.example.tournament.repository.PointRepository;
 import com.example.tournament.repository.TournamentRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -30,7 +28,8 @@ public class PointService {
         Round round = roundService.findRoundById(updatePointDto.getRoundId());
         updatePoints(round, updatePointDto.getResult());
         round.setResult(updatePointDto.getResult());
-        round.setPointsCalculated(true);
+        if (updatePointDto.getResult().name().equals("NULL")) round.setPointsCalculated(false);
+        else round.setPointsCalculated(true);
         Round updatedRound = roundService.save(round);
         log.info(updatedRound.toString());
         return updatedRound;
@@ -59,6 +58,8 @@ public class PointService {
                     updatePlayerPoint(player1, LOSE, -1);
                     updatePlayerPoint(player2, WIN, -1);
                     break;
+                case NULL:
+                    break;
             }
         }
         switch (result) {
@@ -74,6 +75,8 @@ public class PointService {
                 updatePlayerPoint(player1, LOSE, 1);
                 updatePlayerPoint(player2, WIN, 1);
                 break;
+            case NULL:
+                break;
         }
     }
 
@@ -87,16 +90,21 @@ public class PointService {
             case WIN:
                 player.getPoint().setPoints(points + k + k);
                 player.getPoint().setWon(won + k);
+                player.getPoint().setPlayed(played + k);
                 break;
             case DRAW:
                 player.getPoint().setPoints(points + k);
                 player.getPoint().setDraw(draw + k);
+                player.getPoint().setPlayed(played + k);
                 break;
             case LOSE:
                 player.getPoint().setLost(lost + k);
+                player.getPoint().setPlayed(played + k);
+                break;
+            case NULL:
                 break;
         }
-        player.getPoint().setPlayed(played + k);
+
     }
 
 }

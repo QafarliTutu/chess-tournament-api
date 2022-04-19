@@ -4,6 +4,7 @@ import com.example.tournament.exception.NoDataFoundException;
 import com.example.tournament.model.entity.Player;
 import com.example.tournament.model.entity.Round;
 import com.example.tournament.model.entity.Tournament;
+import com.example.tournament.model.enums.Result;
 import com.example.tournament.model.request.CreateTournamentDto;
 import com.example.tournament.repository.TournamentRepository;
 import com.example.tournament.util.TournamentCalendar;
@@ -30,7 +31,10 @@ public class TournamentService {
         tournament.setPlayers(players);
         TournamentCalendar tournamentCalendar = new TournamentCalendar(tournament.getPlayers());
         List<Round> rounds = tournamentCalendar.getSchedule();
-        rounds.forEach(r -> r.setTournament(tournament));
+        rounds.forEach(r -> {
+            r.setTournament(tournament);
+            r.setResult(Result.NULL);
+        } );
         tournament.setRounds(rounds);
         return tournamentRepository.save(tournament);
     }
